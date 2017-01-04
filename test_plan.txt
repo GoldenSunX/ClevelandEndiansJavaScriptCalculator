@@ -1,0 +1,210 @@
+Created (Cole Albers 10/30): Test Plan for calculator.html.
+Updated (cole Albers 10/30): Added Test Cases for addDigit().
+Updated (Sam Yinger 10/30): Added Test Cases for memoryClear(), memoryRecall(), memoryStore(), memoryAdd() and memorySubtract().
+Updated (David Sinchok 10/30): Added test cases for pow, sqrt, dot, and plus_minus
+########################################################################################################################
+Test Plan:
+########################################################################################################################
+
+addDigit():
+
+Test 1: Click Button 1 With "0" on Display
+"1" appears on the Display
+
+Test 2: Click Button 2 With "0" on Display
+"2" appears on the Display
+
+Test 3: Click Button 3 With "0" on Display
+"3" appears on the Display
+
+Test 4: Click Button 4 With "0" on Display
+"4" appears on the Display
+
+Test 5: Click Button 5 With "0" on Display
+"5" appears on the Display
+
+Test 6: Click Button 6 With "0" on Display
+"6" appears on the Display
+
+Test 7: Click Button 7 With "0" on Display
+"7" appears on the Display
+
+Test 8: Click Button 8 With "0" on Display
+"8" appears on the Display
+
+Test 9: Click Button 9 With "0" on Display
+"9" appears on the Display
+
+Test 10: Click Button 0 With "0" on Display
+No change to Display
+
+Test 11:
+Click Button 0 when "1" on Display
+"10" appears on the Display
+
+Test 12:
+Click Button 1 when "1" on Display
+"11" appears on the Display
+
+Test 13:
+Click Button 2 when "1" on Display
+"12" appears on the Display
+
+Test 14:
+Click Button 3 when "1" on Display
+"13" appears on the Display
+
+Test 15:
+Click Button 4 when "1" on Display
+"14" appears on the Display
+
+Test 16:
+Click Button 5 when "1" on Display
+"15" appears on the Display
+
+Test 17:
+Click Button 6 when "1" on Display
+"16" appears on the Display
+
+Test 18:
+Click Button 7 when "1" on Display
+"17" appears on the Display
+
+Test 19:
+Click Button 8 when "1" on Display
+"18" appears on the Display
+
+Test 20:
+Click Button 9 when "1" on Display
+"19" appears on the Display
+
+addOperator()
+
+Test 1:
+Enter one number, click +, enter another number, and click =
+The result should be the addition of the two values.
+
+Test 2:
+Enter one number, click -, enter another number, and click =.
+The result should be number one - number two.
+
+Test 3:
+Enter one number, click x, enter another number, and click =.
+The result should be the multiplication of the two values.
+
+Test 4:
+Enter one number, click the divide symbol, enter another number, and click =.
+The result is the division.
+
+Test 5:
+Click one number, click the +, then click another number, and hit + again.
+The expression should be put in the top bar, and the current sum should be in the bottom calculator display.
+
+handleKeypress()
+
+Testing:
+This callback function forwards keypresses to the appropriate button. To test, type digits and operators, and 
+they should display in the bottom calculator bar.
+
+equalsEvaluate()
+
+Testing:
+Enter any expression, and click = at the end. The result should be displayed.
+emoryStore():
+
+Testing:
+Enter any number or evaluate any expression and then press the MS button. It should make the display on the bottom equivalent to the value on the top display.
+
+
+memoryClear():
+
+Testing:
+Using the test plan for memoryStore(), click the MC button. It should make the bottom display say "There's nothing saved in memory"
+
+
+memoryRecall():
+
+Testing:
+Using the test plan for memoryStore(), click the MR button. It should make the displayed value on top equivalent to the bottom display.
+
+
+memorySubtract():
+
+Testing:
+Using the test plan for memoryStore(), enter in another value or evaluate another expression and press M-. The value on the bottom display
+should be equivalent to the previous memory value - the current above value
+
+
+memoryAdd():
+
+Testing:
+Using the test plan for memoryStore(), enter in another value or evaluate another expression and press M+. The value on the bottom display
+should be equivalent to the previous memory value + the current above value
+
+
+dot():
+Test 1: Immediately click dot, see if it has a 0 before the dot
+
+Test 2: Click a number, click dot, click another number. Should display "number.number"
+
+Test 3: Do an operation, and then evaluate using the equals sign. Immediately click dot and see if it produces a "0."
+
+Test 4: Perform each operation on numbers with decimals
+
+pow():
+Test 1: Click number, click '^', click another number, check to see if it's correct
+
+Test 2: Click 1, check '^', click any other number. Click '='', should result in 1.
+
+Test 3: Click a number, click "+-", click '^', click 2, click '='. should result in a positive number
+
+Most of the testing regarding this falls onto Math.pow(), which has been thoroughly tested.
+
+
+sqrt():
+Test 1: input easy number to sqrt, check it.
+
+Test 2: input negative number, should output NaN
+
+Test 3: input a decimal (.25), sqrt should result in correct sqrt (.5)
+
+Most of the testing regarding this falls onto Math.sqrt(), which has been thoroughly tested.
+
+plus_minus():
+Test 1: input number, click '+-' button, see if it gets negated
+
+Test 2: negate number, click '+-' button, see if it makes the number positive
+
+memoryStore():
+
+Testing:
+Enter any number or evaluate any expression and then press the MS button. It should make the display on the bottom equivalent to the value on the top display.
+
+
+memoryClear():
+
+Testing:
+Using the test plan for memoryStore(), click the MC button. It should make the bottom display say "There's nothing saved in memory"
+
+
+memoryRecall():
+
+Testing:
+Using the test plan for memoryStore(), click the MR button. It should make the displayed value on top equivalent to the bottom display.
+
+
+memorySubtract():
+
+Testing:
+Using the test plan for memoryStore(), enter in another value or evaluate another expression and press M-. The value on the bottom display
+should be equivalent to the previous memory value - the current above value
+
+
+memoryAdd():
+
+Testing:
+Using the test plan for memoryStore(), enter in another value or evaluate another expression and press M+. The value on the bottom display
+should be equivalent to the previous memory value + the current above value
+
+
+########################################################################################################################

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- Created (Cole Albers 10/27): HTML Page for the Calculator. -->
+    <!-- Updated (Cole Albers 10/27): Added Content to HTML Page WITHOUT CSS. -->
+    <!-- Updated (Cole Albers 10/27): Added functionality to the 0-9 buttons. Created the addDigit function. -->
+    <!-- Updated (Andrew Fox 10/28): Added working operations, keypress input, and changed some element ids. -->
+    <!-- Updated (Cole Albers 10/29): Added Chained Registration for the 0-9 buttons. Moved <script> below body. -->
+    <!-- Updated (Sam Yinger 10/30): Modified the MC, MR, M+, and M- buttons with listeners and created their respective methods -->
+    <!-- Updated (Cole Albers 10/30): Cleaned up some documentation and code. -->
+    <!-- Updated (David Sinchok 10/30): Added pow and sqrt buttons, and event listeners for pow, sqrt, dot, and plus_minus -->
+    <!-- Updated (Adam Prater 10/30): Implemented C, CE, and Backspace buttons (listeners and fuctions), created styling for the calculator -->
+    <!-- Updated (Sam Yinger 10/30): Fixed very minor grammatical errors -->
+    <!-- Updated (David Sinchok 10/30): fixed minor bug regarding plus minus and number to x10^-x, added another divide keypress event handler -->
+    <!-- Updated (David Sinchok 10/30): fixed clearEntry function issue, fixed sqrt display bug -->
+    <!-- Updated (David Sinchok 10/30): fixed plus_minus bug-->
+</head>
+<body>
+<!-- Calculator -->
+<div class = "calc">
+    <!-- Screen -->
+    <div class="screen">
+        <!-- Displays the sequence of numbers and operations -->
+        <div>
+            <textarea id="currentExpression" title="display" readonly="readonly">There's currently no sequence</textarea>
+        </div>
+        <!-- Displays the current entry or total -->
+        <div>
+            <input id="currentEntry" title="input" type="text" readonly="readonly" value="0"/>
+        </div>
+    </div>
+    <!-- Memory Buttons -->
+    <div>
+        <button type="button" id="memory_clear" class="button mem">MC</button>
+        <button type="button" id="memory_recall" class="button mem">MR</button>
+        <button type="button" id="memory_add" class="button mem">M+</button>
+        <button type="button" id="memory_subtract" class="button mem">M-</button>
+        <button type="button" id="memory_store" class="button mem">MS</button>
+    </div>
+    <!-- Digits, Operations, and Clear Buttons-->
+    <div>
+        <div>
+            <button id="clear_entry" type="button" class="button clr three">CE</button>
+            <button id="clear" type="button" class="button clr three">C</button>
+            <button id="delete" type="button" class="button clr three">&#9003;</button>
+        </div>
+        <div>
+            <button id = "sqrt" class="button op three">&#8730;</button>
+            <button id = "pow" class="button op three">^</button>
+            <button id="divide" type="button" class="button op three">&#247;</button>
+        </div>
+        <div>
+            <button id="digit7" type="button" value="7" class="button dig">7</button>
+            <button id="digit8" type="button" value="8" class="button dig">8</button>
+            <button id="digit9" type="button" value="9" class="button dig">9</button>
+            <button id="mult" type="button" class="button op">&#215;</button>
+        </div>
+        <div>
+            <button id="digit4" type="button" value="4" class="button dig">4</button>
+            <button id="digit5" type="button" value="5" class="button dig">5</button>
+            <button id="digit6" type="button" value="6" class="button dig">6</button>
+            <button id="subtract" type="button" class="button op">-</button>
+        </div>
+        <div>
+            <button id="digit1" type="button" value="1" class="button dig">1</button>
+            <button id="digit2" type="button" value="2" class="button dig">2</button>
+            <button id="digit3" type="button" value="3" class="button dig">3</button>
+            <button id="add" type="button" class="button op">+</button>
+        </div>
+        <div>
+            <button id="plus_minus" type="button" class="button op">&plusmn;</button>
+            <button id="digit0" type="button" value="0" class="button dig">0</button>
+            <button id="dot" type="button" class="button op">.</button>
+            <button id="equalOp" type="button" class="button eql">=</button>
+        </div>
+    </div>
+    <!-- Displays the current memory value -->
+    <div class="screen bottomScreen">
+        <p id="visualMemory">There's nothing saved in memory</p>
+    </div>
+</div>
+
+</body>
+<script>
+    //Focus for keypresses.
+    document.getElementById("currentEntry").focus();
+
+    // Displays in the html.
+    var currentEntry = document.getElementById("currentEntry");
+    var currentExpression = document.getElementById("currentExpression");
+    var currentMemory = "0";
+    var visualMemory = document.getElementById("visualMemory");
+
+    // Variable used to correctly implement the display after a call to an operation.
+    var operationSelected = false;
+
+    //Used to allow the user to change the operator they selected if they haven't changed the calc value.
+    var currentEntryChanged = true;
+
+    // Variables for calculator operation.
+    var operators = ['+', '-', '×', '÷', '^'];
+    var valOne = 0;
+    var valTwo = 0;
+    var valOp = null;
+
+    // Event Listeners for Digit Buttons.
+    for (var i = 0; i < 10; i ++) {
+        document.getElementById("digit"+String(i)).addEventListener("click", addDigit);
+    }
+
+    //Event listeners for operators
+    document.getElementById("add").addEventListener("click", addOperator);
+    document.getElementById("mult").addEventListener("click", addOperator);
+    document.getElementById("subtract").addEventListener("click", addOperator);
+    document.getElementById("divide").addEventListener("click", addOperator);
+
+    //Event listeners for memory buttons
+    document.getElementById("memory_clear").addEventListener("click", memoryClear);
+    document.getElementById("memory_recall").addEventListener("click", memoryRecall);
+    document.getElementById("memory_add").addEventListener("click", memoryAdd);
+    document.getElementById("memory_subtract").addEventListener("click", memorySubtract);
+    document.getElementById("memory_store").addEventListener("click", memoryStore);
+
+    //Event listeners for sqrt, '.', pow, and the plus_minus button
+    document.getElementById("plus_minus").addEventListener("click", plus_minus);
+    document.getElementById("dot").addEventListener("click", dot);
+    document.getElementById("pow").addEventListener("click", addOperator);
+    document.getElementById("sqrt").addEventListener("click", sqrt);
+    //Clear Event listeners
+    document.getElementById("clear_entry").addEventListener("click",entryClear);
+    document.getElementById("clear").addEventListener("click",clear);
+    document.getElementById("delete").addEventListener("click", backspace);
+
+    //Other Event Listeners
+    document.getElementById("currentEntry").addEventListener("keydown", handleKeypress);
+    document.getElementById("equalOp").addEventListener("click", equalsEvaluate);
+    document.documentElement.addEventListener("click", resetFocus);
+
+    /*
+     Created (Andrew Fox 10/30): Function used to ensure that the form always has focus,
+     allowing for keypress entry.
+     */
+    function resetFocus() {
+        console.info("Received Focus.");
+        currentEntry.focus();
+    }
+
+    /*
+     Created (Andrew Fox 10/28): Triggers click events based upon user keys entered. Requires that focus
+     is on current_entry.
+     Updated (Andrew Fox 10/30): Fixed bug where the operators had the incorrect element id.
+     */
+    function handleKeypress(event) {
+        var nbr = 0;
+        console.info("Key entered: " + event.keyCode);
+        if((event.keyCode > 95) && (event.keyCode < 106)) {
+            nbr = event.keyCode - 96;
+            document.getElementById("digit" + nbr).click();
+        } else if((event.keyCode > 47) && (event.keyCode < 58)) {
+            nbr = event.keyCode - 48;
+            document.getElementById("digit" + nbr).click();
+        } else if(event.keyCode == 107) {
+            document.getElementById('add').click();
+        } else if(event.keyCode == 109) {
+            document.getElementById('subtract').click();
+        } else if(event.keyCode == 106) {
+            document.getElementById('mult').click();
+        } else if(event.keyCode == 111 || event.keyCode == 191) {
+            document.getElementById('divide').click();
+        } else if(event.keyCode == 110 || event.keyCode == 190 ) {
+            document.getElementById('dot').click();
+        } else if(event.keyCode == 107) {
+            document.getElementById('+').click();
+        } else if(event.keyCode == 13 || event.keyCode == 61) {
+            document.getElementById("equalOp").click();
+        } else if(event.keyCode == 8) {
+            document.getElementById("delete").click();
+        } else if(event.keyCode == 46) {
+            document.getElementById('clear_entry').click();
+        }
+    }
+
+
+    //Created (Cole Albers 10/27): Displays the digit to the screen.
+    function addDigit() {
+        currentEntry.focus();
+
+        var currentVal = currentEntry.value;
+        if (operationSelected == true) {
+            currentVal = '';
+            operationSelected = false;
+        }
+        if (currentVal != '0'){
+            currentVal += this.value;
+        }
+        else {
+            if (this.value != '0') {
+                currentVal = this.value;
+            }
+        }
+
+        currentEntryChanged = true;
+        currentEntry.value = currentVal;
+    }
+
+    /*
+     Created (Andrew Fox 10/28): Adds an operator to the end of the current_expres element. If there is
+     already a term consisting of two numbers and an operator, this will update
+     current_entry to be the value of that term.
+     Updated (Andrew Fox 10/30): Changed the way values were added so that less memory is wasted.
+     Updated (Andrew Fox 10/30): Updated with special case for divide by 0.
+     */
+    function addOperator() {
+        currentEntry.focus();
+        console.info("Adding operator to the calculator.");
+
+        var lastIndex = currentExpression.innerHTML.length - 1;
+
+        //If the last thing entered was an operator and the user has not changed the value of currentEntry
+        console.info("Last char: " + currentExpression.innerHTML.charAt(lastIndex) + " EntryChanged (Determine if operator is changed): " + currentEntryChanged);
+        if (operators.indexOf(currentExpression.innerHTML.charAt(lastIndex)) > -1 && !currentEntryChanged) {
+            currentExpression.innerHTML = ' ' + currentExpression.innerHTML.replace(/.$/, this.innerHTML);
+            //Replace operator in sequence for correct calculation.
+            valOp = this.innerHTML;
+        } else {
+            //Add value to currentExpression.
+            if (currentExpression.innerHTML == "There's currently no sequence") {
+                currentExpression.innerHTML = Number(currentEntry.value) + ' ' + this.innerHTML;
+            } else {
+                currentExpression.innerHTML += ' ' + Number(currentEntry.value) + ' ' + this.innerHTML;
+            }
+            operationSelected = true;
+
+            if (valOp == null) {
+                valOne = Number(currentEntry.value);
+                valOp = this.innerHTML;
+            } else {
+                console.info("Evaluating current entries.");
+                valTwo = Number(currentEntry.value);
+
+                //Evaluate, and set values for next calculation.
+                valOne = evaluateTerm(valOne, valTwo, valOp);
+                valOp = this.innerHTML;
+                if (isFinite(valOne)) {
+                    currentEntry.value = valOne;
+                } else {
+                    window.alert("Invalid Input.");
+                    currentEntry.value = 0;
+                }
+            }
+        }
+        currentEntryChanged = false;
+    }
+
+    /*
+     Created (Andrew Fox 10/28): Callback for the equals button. Evaluates the expression and resets the calculator.
+     Updated (Andrew Fox 10/30): Changed to work with new operator algorithm.
+     Updated (Andrew Fox 10/30): Updated with special case for divide by 0.
+     */
+    function equalsEvaluate() {
+        currentEntry.focus();
+        console.info("Evaluating expression.");
+        var value;
+
+        //User hit equals with values in expression. Do nothing if they hit equals with only a value in currentEntry.
+        if (valOp != null) {
+            valTwo = Number(currentEntry.value);
+            value = evaluateTerm(valOne, valTwo, valOp);
+            if (isFinite(value)) {
+                currentEntry.value = value;
+            } else {
+                window.alert("Invalid Input.");
+                currentEntry.value = 0;
+            }
+        }
+
+        //Reset calculator values.
+        operationSelected = true;
+        currentExpression.innerHTML = "There's currently no sequence";
+        valOne = 0;
+        valTwo = 0;
+        valOp = null;
+    }
+
+    /*
+     Created (Andrew Fox 10/28): Calculates the last term in current_expres with the previous value of the expression.
+     Updated (Andrew Fox 10/30): Made this method less dependent upon the implementation of calculator.
+     Updated (David Sinchok 10/30): Added the ability to use pow
+     param: value1 - The first Number in the expression.
+     param: value2 - The second Number in the expression.
+     param: operator - The operator String between the two terms of the expression to be evaluated.
+     */
+    function evaluateTerm(value1, value2, operator) {
+        var newVal;
+        if (operator == '+') {
+            newVal = value1 + value2;
+        } else if (operator == '-') {
+            newVal = value1 - value2;
+        } else if (operator == '×') {
+            newVal = value1 * value2;
+        } else if (operator == "÷") {
+            newVal = value1 / value2;
+        } else if (operator == "^") {
+            newVal = Math.pow(value1, value2);
+        }
+
+        return newVal;
+    }
+
+    // Created (Sam Yinger 10/30): Clears the memory value
+    function memoryClear() {
+        currentMemory = "0";
+        visualMemory.innerHTML = "There's nothing saved in memory";
+    }
+
+    // Created (Sam Yinger 10/30): Recalls the memory value to the display
+    function memoryRecall() {
+        currentEntry.value = parseFloat(currentMemory);
+    }
+
+    // Created (Sam Yinger 10/30): Adds the display value to the memory value in memory
+    function memoryAdd() {
+        currentMemory = parseFloat(currentMemory) + parseFloat(currentEntry.value);
+        visualMemory.innerHTML = currentMemory;
+    }
+
+    //Created (Sam Yinger 10/30): Subtracts the display value from the memory value in memory
+    function memorySubtract() {
+        currentMemory = parseFloat(currentMemory) - parseFloat(currentEntry.value);
+        visualMemory.innerHTML = currentMemory;
+
+    }
+
+    // Created (Sam Yinger 10/30): Copies the display value to the memory value
+    function memoryStore() {
+        currentMemory = parseFloat(currentEntry.value);
+        visualMemory.innerHTML = currentMemory;
+    }
+
+    // Created (Adam Prater 10/30): Clears current entry
+    function entryClear() {
+        currentEntry.value = 0;
+        currentEntryChanged = false;
+    }
+
+    // Created (Adam Prater 10/30): Clears current entry and current expression
+    function clear(){
+        currentEntry.value = 0;
+        currentExpression.innerHTML = "There's currently no sequence";
+        valOne = 0;
+        valTwo = 0;
+        valOp = null;
+        currentEntryChanged = false;
+        operationSelected = false;
+    }
+
+    // Created (Adam Prater 10/30): Backspaces on the current entry
+    function backspace(){
+        var current = currentEntry.value;
+        if(current.length == 1){
+            current = '0';
+        }else{
+            current = current.substring(0,current.length-1);
+        }
+        currentEntry.value = current;
+    }
+
+    //Created (David Sinchok 10/30): Negates the current displayed number
+    function plus_minus() {
+
+        if (currentEntry.value.charAt(0) == '-') {
+            currentEntry.value = currentEntry.value.replace(/^./, '');
+            currentEntryChanged = true;
+        }
+        else if (Number(currentEntry.value) != 0) {
+            currentEntry.value = '-' +currentEntry.value;
+        }
+    }
+
+    //Created (David Sinchok 10/30): takes the sqrt of the current displayed number
+    function sqrt(){
+        currentEntry.value = Math.sqrt(currentEntry.value);
+        currentEntryChanged = true;
+        operationSelected = true;
+
+    }
+    //Created (David Sinchok 10/30): Raises the currently displayed number to the next immediate number
+    function pow(){
+        currentExpression.innerHTML += currentEntry.value +"^";
+        currentEntryChanged = false;
+        operationSelected = true;
+
+    }
+
+    //Created (David Sinchok 10/30): Adds a decimal to the currently displayed number
+    function dot(){
+        if (operationSelected){
+            currentEntry.value = '0' + this.innerHTML;
+            operationSelected = false;
+        }
+        else {
+            if (currentEntry.value.indexOf('.') == -1){
+                currentEntry.value += this.innerHTML;
+            }
+        }
+    }
+
+
+</script>
+</html>

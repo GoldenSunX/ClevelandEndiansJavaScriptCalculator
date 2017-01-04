@@ -1,0 +1,120 @@
+/* Created (Cole Albers 10/27): CSS Page for calculator.html. */
+/* Updated (Adam Prater 10/30): Created styling for the calculator*/
+
+/*calculator body*/
+.calc {
+    width: 475px;
+    height: 625px;
+    background: #A0A097;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px rgba(15, 22, 49, 0.67);
+}
+
+/*calculator screen with shadow to provide depth*/
+.screen {
+    height: 100px;
+    width:378px;
+    background: white;
+    position: static;
+    display: inline-block;
+    box-shadow: inset 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    line-height: 50px;
+    text-align: right;
+    padding-right: 10px;
+
+
+}
+
+.bottomScreen {
+    height: 50px;
+    line-height: 13px;
+    margin-top: 10px;
+    font-size: 20px;
+    position: static;
+}
+
+/* calculator buttons with shadow to provide depth*/
+.button {
+    display: inline-block;
+    width: 90px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+    top: 0;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0 4px rgba(0, 0, 0, 0.2);
+    margin: 10px 3px;
+    line-height: 40px;
+    border: none;
+    font-size: 20px;
+}
+
+/*highlight button that is being hovered*/
+.button:hover {
+    background-color: white;
+    cursor: pointer;
+}
+
+/* button press 'animation'*/
+.button:active {
+    box-shadow: 0 0;
+    top: 4px;
+    margin-bottom:0;
+    outline: 0;
+}
+
+/*give buttons colors by groups*/
+.dig {
+    background-color: aquamarine;
+}
+
+.op {
+    background-color: #9dcfff;
+}
+
+.mem {
+   background-color: #ff7488;
+    margin-left: 3px;
+    margin-right: 3px;
+    width: 70px;
+}
+
+.clr {
+    background-color: #f2ff88;
+}
+
+.eql {
+    background-color: #d0a8ff;
+}
+
+/*formatting to fit current entry and current expression on screen*/
+#currentExpression{
+    width: 95%;
+    border: none;
+    margin-bottom: -25px;
+    margin-top: -10px;
+    font-size: 12px;
+    text-align: right;
+    resize: none;
+}
+
+#currentEntry {
+    margin-top: 10px;
+    margin-bottom: 0;
+    padding: 0;
+    text-decoration: none;
+    border: none;
+    text-align: right;
+    font-size: 16px;
+    width: 95%;
+
+}
+
+.three{
+    width: 123px;
+}
